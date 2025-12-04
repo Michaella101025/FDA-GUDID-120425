@@ -6,3 +6,6 @@ google-generativeai
 openai
 anthropic
 requests
+altair
+PyYAML
+watchdog
