@@ -1,0 +1,8 @@
+streamlit
+pandas
+pyyaml
+plotly
+google-generativeai
+openai
+anthropic
+requests
