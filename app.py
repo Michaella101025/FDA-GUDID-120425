@@ -798,23 +798,22 @@ def render_sidebar():
 
     # Language & theme
     st.sidebar.markdown("----")
-    lang = st.sidebar.radio(
+    # Using 'key' in st.radio automatically syncs with st.session_state.lang
+    st.sidebar.radio(
         t("language"),
         options=["zh", "en"],
         format_func=lambda v: "繁體中文" if v == "zh" else "English",
-        index=0 if st.session_state.lang == "zh" else 1,
+        index=0 if st.session_state.get("lang", "zh") == "zh" else 1,
         key="lang",
     )
-    st.session_state.lang = lang
 
-    ui_theme = st.sidebar.radio(
+    st.sidebar.radio(
         t("theme"),
         options=["light", "dark"],
         format_func=lambda v: t("theme_light") if v == "light" else t("theme_dark"),
-        index=0 if st.session_state.ui_theme == "light" else 1,
+        index=0 if st.session_state.get("ui_theme", "light") == "light" else 1,
         key="ui_theme",
     )
-    st.session_state.ui_theme = ui_theme
 
     # Flower Jackslot
     st.sidebar.markdown("----")
@@ -851,6 +850,7 @@ def render_sidebar():
                 type="password",
                 key=f"api_key_input_{provider}",
             )
+            # Safe update because key name differs from widget key
             st.session_state.api_keys_ui[provider] = st.session_state.get(
                 f"api_key_input_{provider}", ""
             )
@@ -1072,7 +1072,7 @@ def render_analysis_workspace():
 
 def run_selected_agents():
     """Sequentially execute all selected agents."""
-    if not st.session_state.dataset_df is not None and not st.session_state.pipeline_input:
+    if st.session_state.dataset_df is None and not st.session_state.pipeline_input:
         st.warning(t("no_dataset"))
         return
 
@@ -1284,14 +1284,14 @@ def render_note_keeper():
             else 0,
             key="note_ai_model",
         )
-        st.session_state.note_ai_model = st.session_state.note_ai_model
+        # Note: redundant assignment removed
         st.session_state.note_ai_max_tokens = st.number_input(
             t("max_tokens"),
             min_value=256,
             max_value=8000,
             value=st.session_state.note_ai_max_tokens,
             step=256,
-            key="note_ai_max_tokens",
+            key="note_ai_max_tokens_input",
         )
 
         # Tabs for each AI tool
