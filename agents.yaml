@@ -1,0 +1,55 @@
+defaults:
+  max_tokens: 12000
+  provider: "gemini"
+  model: "gemini-2.5-flash"
+  temperature: 0.1
+
+agents:
+  - id: schema_validator
+    name: "Schema & Required Fields Validator"
+    category: "validation"
+    provider: "gemini"
+    model: "gemini-2.5-flash"
+    enabled: true
+    system_prompt: |
+      You are an FDA GUDID schema validation expert...
+      Validate required fields, data types, and allowed values.
+      Return JSON: { "summary": "...", "issues": [...], "metrics": {...} }
+
+  - id: udi_structure_checker
+    name: "UDI / DI Structure Checker"
+    category: "validation"
+    provider: "openai"
+    model: "gpt-4o-mini"
+    enabled: true
+    system_prompt: |
+      You are a UDI/DI structure specialist. Check UDI and DI formats...
+
+  - id: device_name_consistency
+    name: "Brand / Device Name Consistency"
+    category: "semantic"
+    provider: "gemini"
+    model: "gemini-2.5-flash-lite"
+    enabled: true
+    system_prompt: |
+      Check for consistency between brand_name, device_description,
+      clinical size, and catalog numbers...
+
+  - id: mri_safety_analyzer
+    name: "MRI Safety Labeling Analyzer"
+    category: "risk"
+    provider: "anthropic"
+    model: "claude-3-5-sonnet"
+    enabled: true
+    system_prompt: |
+      You are an MRI safety labeling expert. Check MRI safety status
+      vs. other fields...
+
+  - id: duplicate_di_detector
+    name: "Duplicate DI / Brand Duplicates Detector"
+    category: "quality"
+    provider: "grok"
+    model: "grok-4-fast-reasoning"
+    enabled: true
+    system_prompt: |
+      Identify duplicated DIs, near-duplicates, and suspicious clustering...
